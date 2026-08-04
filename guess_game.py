@@ -8,15 +8,17 @@
 追加機能: 回数制限モード（決められた回数以内に当てる）
 """
 
+import math
 import random
 
 MIN_NUMBER = 1
 MAX_NUMBER = 100
 
 # 大小のヒントが返るので、真ん中を選び続ければ候補は毎回半分になる。
-# 100 通りを 1 通りまで絞るのに必要な回数は log2(100) ≈ 6.64 で、
-# 切り上げた 7 が「上手くやれば必ず勝てる」ぎりぎりの回数になる
-MAX_ATTEMPTS = 7
+# 必要な手数は範囲の広さで決まる（1〜100 なら log2(100) ≈ 6.64 で 7 手）。
+# 定数 7 を直接書くと MIN/MAX を変えたときに破綻する——範囲を 1〜200 にした
+# 時点で 8 手必要になり、7 手制限では絶対に勝てないゲームになるため、計算で出す
+MAX_ATTEMPTS = math.ceil(math.log2(MAX_NUMBER - MIN_NUMBER + 1))
 
 
 def read_guess() -> int:
@@ -83,4 +85,9 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (EOFError, KeyboardInterrupt):
+        # Ctrl+C / Ctrl+Z は「やめる」という正常な操作なので、
+        # 赤いトレースバックではなく普通のメッセージで終わらせる
+        print("\n中断しました。")
