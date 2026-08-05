@@ -14,6 +14,7 @@ AIエンジニア講座 Section 4-2「Python 実践」の実装課題。
 |---|---|
 | `guess_game.py` | 課題の成果物。数当てゲーム本体 |
 | `verify_binary_search.py` | 追加機能の「7回制限」に根拠があるかを確かめた検証スクリプト |
+| `tests/test_guess_game.py` | pytest のテスト（32 件） |
 
 ## 実行方法
 
@@ -22,6 +23,21 @@ python guess_game.py
 ```
 
 Python の標準ライブラリだけで動くため、追加のインストールは不要。
+
+## テスト
+
+```powershell
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install pytest
+.venv\Scripts\python.exe -m pytest tests -q
+```
+
+`input()` と `print()` をモックしているので、対話しなくても実行できる。乱数も固定している。
+
+**テストが本当に効いているかは、わざと壊して確かめた。** `MAX_ATTEMPTS` を定数 `7` に戻して
+範囲を 1〜200 に広げると `test_上限は計算結果から取っている` が落ちる。
+最初に書いたテストはこの変更を検出できておらず、`math.ceil(math.log2(...))` を
+テスト側で計算し直しているだけで実装を一行も呼んでいなかった。
 
 ## 実装した機能
 
