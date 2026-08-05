@@ -14,11 +14,20 @@ import random
 MIN_NUMBER = 1
 MAX_NUMBER = 100
 
-# 大小のヒントが返るので、真ん中を選び続ければ候補は毎回半分になる。
-# 必要な手数は範囲の広さで決まる（1〜100 なら log2(100) ≈ 6.64 で 7 手）。
-# 定数 7 を直接書くと MIN/MAX を変えたときに破綻する——範囲を 1〜200 にした
-# 時点で 8 手必要になり、7 手制限では絶対に勝てないゲームになるため、計算で出す
-MAX_ATTEMPTS = math.ceil(math.log2(MAX_NUMBER - MIN_NUMBER + 1))
+
+def max_attempts_for(lowest: int, highest: int) -> int:
+    """その範囲を当てるのに必要な最大手数を返す。
+
+    大小のヒントが返るので、真ん中を選び続ければ候補は毎回半分になる。
+    必要な手数は範囲の広さで決まる（1〜100 なら log2(100) ≈ 6.64 で 7 手）。
+
+    定数 7 を直接書くと MIN/MAX を変えたときに破綻する——範囲を 1〜200 にした
+    時点で 8 手必要になり、7 手制限では絶対に勝てないゲームになる。
+    """
+    return math.ceil(math.log2(highest - lowest + 1))
+
+
+MAX_ATTEMPTS = max_attempts_for(MIN_NUMBER, MAX_NUMBER)
 
 
 def read_guess() -> int:
