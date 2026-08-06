@@ -20,15 +20,18 @@ AIエンジニア講座 Section 4-2「Python 実践」の実装課題。
 
 ## 実行方法
 
+コマンドはすべて**リポジトリのルート**（このファイルの1つ上の階層）で実行する。
+
 ```powershell
-python score_report.py
+python task2\score_report.py
 ```
 
-Python の標準ライブラリだけで動くため、追加のインストールは不要。
+本体は Python の標準ライブラリだけで動くため、追加のインストールは不要
+（テストの実行には pytest が要る。下記「テスト」を参照）。
 引数に CSV のパスを渡すと、そのファイルを集計する。
 
 ```powershell
-python score_report.py data/欠損サンプル.csv
+python task2\score_report.py task2\data\欠損サンプル.csv
 ```
 
 ## 実行結果
@@ -59,6 +62,8 @@ python score_report.py data/欠損サンプル.csv
 最低 65（佐藤次郎・国語・2024-09-01）
 ```
 
+![集計結果](docs/01-report.png)
+
 集計が合っているかは、**別の切り口で足して同じ数になるか**で確かめられる。
 参加者ごとの合計を足すと 3,399、科目ごとの合計を足しても 3,399 になる。
 どちらか一方でも行を取りこぼしていれば、この2つは一致しない。テストにも入れてある。
@@ -86,6 +91,11 @@ python score_report.py data/欠損サンプル.csv
   4 行目: スコアが数値ではない: '満点'
   5 行目: 名前 が空
 ```
+
+`data/欠損サンプル.csv` を渡したところ。集計は使える 2 行だけで行い、
+飛ばした 3 行は行番号と理由つきで最後に報告する。
+
+![読み飛ばし報告](docs/03-skipped.png)
 
 ## 設計で迷ったところ
 
@@ -140,15 +150,28 @@ ValueError: t.csv に必要な列がありません: 名前（見つかった列
 
 ## テスト
 
+リポジトリのルートで実行する。
+
 ```powershell
 python -m venv .venv
 .venv\Scripts\python.exe -m pip install pytest
-.venv\Scripts\python.exe -m pytest task2/tests -q
+.venv\Scripts\python.exe -m pytest task2\tests -q
 ```
+
+`python -m pytest` ではなく `.venv\Scripts\python.exe` を指定している。
+`python` は環境によって venv の外の Python を掴むため、pytest が見つからない。
 
 ```
 44 passed
 ```
+
+`-q` を `-v` に変えると、44 件それぞれが何を確かめているかが出る。
+
+```powershell
+.venv\Scripts\python.exe -m pytest task2\tests -v
+```
+
+![テストの実行結果](docs/02-tests.png)
 
 集計値は配布データを手計算した値で固定している（例: 山田太郎は 8 件・平均 83.625・最高 91・最低 75）。
 
